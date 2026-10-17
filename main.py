@@ -118,7 +118,7 @@ class SSHServer(paramiko.ServerInterface):
         return paramiko.OPEN_FAILED_ADMINISTRATIVELY_PROHIBITED
 
     def check_auth_password(self, username, password):
-        print(f"[!] CAPTURED LOGIN - Username: {username} | Password: {password}")
+        print(f"[!] CAPTURED LOGIN - Username: {username!r} | Password: {password!r}")
         event_logger.log_event(self.session_id, self.addr, "auth_password",
                                 username=username, password=password)
         return paramiko.AUTH_SUCCESSFUL
@@ -146,35 +146,37 @@ class SSHServer(paramiko.ServerInterface):
 def handle_client(client, addr, host_key):
     print(f"\n[*] Connection received from {addr[0]}:{addr[1]}")
 
-    transport = paramiko.Transport(client)
-    transport.local_version = "SSH-2.0-OpenSSH_9.6p1 Ubuntu-3ubuntu13.19"
-    transport.add_server_key(host_key)
+    with paramiko.Transport(client) as transport:
+        transport.local_version = "SSH-2.0-OpenSSH_9.6p1 Ubuntu-3ubuntu13.19"
+        transport.add_server_key(host_key)
 
-    server = SSHServer(addr)
-    event_logger.log_event(server.session_id, addr, "connection_received")
+        server = SSHServer(addr)
+        event_logger.log_event(server.session_id, addr, "connection_received")
 
-    try:
-        transport.start_server(server=server)
-    except paramiko.SSHException as e:
-        print(f"[-] SSH negotiation failed: {e}")
-        return
-    except (EOFError, ConnectionResetError, socket.error) as e:
-        print(f"[-] Connection dropped abruptly by client: {e}")
-        return
-    except Exception as e:
-        print(f"[-] Unexpected error: {e}")
-        return
+        try:
+            transport.start_server(server=server)
+        except paramiko.SSHException as e:
+            print(f"[-] SSH negotiation failed: {e}")
+            return
+        except (EOFError, ConnectionResetError, socket.error) as e:
+            print(f"[-] Connection dropped abruptly by client: {e}")
+            return
+        except Exception as e:
+            print(f"[-] Unexpected error: {e}")
+            return
 
-    channel = transport.accept(20)
-    if channel is None:
-        print("[-] Attacker dropped connection before opening a channel.")
-        return
+        channel = transport.accept(20)
+        if channel is None:
+            print("[-] Attacker dropped connection before opening a channel.")
+            return
 
-    print("[+] Attacker successfully 'authenticated' and opened a channel.")
-    event_logger.log_event(server.session_id, addr, "channel_opened")
+        print("[+] Attacker successfully 'authenticated' and opened a channel.")
+        event_logger.log_event(server.session_id, addr, "channel_opened")
 
-    # add a shell here
-    channel.close()
+        # add a shell here
+        channel.close()
+        time.sleep(0.2)
+        transport.close()
 
 def start_honeypot():
     if args.development:
