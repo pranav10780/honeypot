@@ -48,3 +48,84 @@ If the attacker decides to do a port scan the `SSH_BANNER` can spoof to make it 
 ```
 
 >NOTE: I have 2 keys loaded inside `ssh-agent` which caused it to show both undet the same user hacker.
+
+
+## File examples
+
+This is to show how different file formats will look like.
+
+### Text
+
+```bash
+pranav@server:~/honeypot$ cat hacker.txt 
+[2026-10-26T07:10:42.514374+00:00] 127.0.0.1:54494 session=127.0.0.1_1792998642_89329909 connection_received 
+[2026-10-26T07:10:42.567890+00:00] 127.0.0.1:54494 session=127.0.0.1_1792998642_89329909 auth_pubkey username=hacker key_type=ssh-ed25519 key_fp=xxxxxxxxxxxxxxxxxxxxxxxx key_full=ssh-ed25519 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+[2026-10-26T07:10:42.568801+00:00] 127.0.0.1:54494 session=127.0.0.1_1792998642_89329909 auth_pubkey username=hacker key_type=ssh-ed25519 key_fp=xxxxxxxxxxxxxxxxxxxxxxxxx key_full=ssh-ed25519 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+[2026-10-26T07:10:47.131840+00:00] 127.0.0.1:54494 session=127.0.0.1_1792998642_89329909 auth_password username=hacker password=hackerman123456789
+[2026-10-26T07:10:47.133692+00:00] 127.0.0.1:54494 session=127.0.0.1_1792998642_89329909 channel_opened
+```
+
+### Json
+
+```json
+pranav@server:~/honeypot$ cat hacker.json 
+[
+  {
+    "ts": "2026-10-26T07:10:42.514374+00:00",
+    "session_id": "127.0.0.1_1792998642_89329909",
+    "src_ip": "127.0.0.1",
+    "src_port": 54494,
+    "event": "connection_received"
+  },
+  {
+    "ts": "2026-10-26T07:10:42.567890+00:00",
+    "session_id": "127.0.0.1_1792998642_89329909",
+    "src_ip": "127.0.0.1",
+    "src_port": 54494,
+    "event": "auth_pubkey",
+    "username": "hacker",
+    "key_type": "ssh-ed25519",
+    "key_fp": "xxxxxxxxxxxxxxxxxxxxxxx",
+    "key_full": "ssh-ed25519 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "ts": "2026-10-26T07:10:42.568801+00:00",
+    "session_id": "127.0.0.1_1792998642_89329909",
+    "src_ip": "127.0.0.1",
+    "src_port": 54494,
+    "event": "auth_pubkey",
+    "username": "hacker",
+    "key_type": "ssh-ed25519",
+    "key_fp": "xxxxxxxxxxxxxxxxxxxxxx",
+    "key_full": "ssh-ed25519 xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "ts": "2026-10-26T07:10:47.131840+00:00",
+    "session_id": "127.0.0.1_1792998642_89329909",
+    "src_ip": "127.0.0.1",
+    "src_port": 54494,
+    "event": "auth_password",
+    "username": "hacker",
+    "password": "hackerman123456789"
+  },
+  {
+    "ts": "2026-10-26T07:10:47.133692+00:00",
+    "session_id": "127.0.0.1_1792998642_89329909",
+    "src_ip": "127.0.0.1",
+    "src_port": 54494,
+    "event": "channel_opened"
+  }
+]
+```
+
+### CSV
+
+```bash
+pranav@server:~/honeypot$ cat hacker.csv 
+ts,session_id,src_ip,src_port,event,username,password,key_type,key_fp,key_full
+2026-10-26T07:10:42.514374+00:00,127.0.0.1_1792998642_89329909,127.0.0.1,54494,connection_received,,,,,
+2026-10-26T07:10:42.567890+00:00,127.0.0.1_1792998642_89329909,127.0.0.1,54494,auth_pubkey,hacker,,ssh-ed25519,xxxxxxxxxxxxx,ssh-ed25519 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+2026-10-26T07:10:42.568801+00:00,127.0.0.1_1792998642_89329909,127.0.0.1,54494,auth_pubkey,hacker,,ssh-ed25519,xxxxxxxxxxxxxxxxxxxxx,ssh-ed25519 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+2026-10-26T07:10:47.131840+00:00,127.0.0.1_1792998642_89329909,127.0.0.1,54494,auth_password,hacker,hackerman123456789,,,
+2026-10-26T07:10:47.133692+00:00,127.0.0.1_1792998642_89329909,127.0.0.1,54494,channel_opened,,,,,
+```
