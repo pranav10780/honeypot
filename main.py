@@ -9,6 +9,8 @@ import time
 import uuid
 from datetime import datetime, timezone
 
+SSH_BANNER = "SSH-2.0-OpenSSH_9.6p1 Ubuntu-3ubuntu13.19"
+
 parser = argparse.ArgumentParser(description="A sample CLI tool.")
 parser.add_argument("-d", "--development", action="store_true",
                      help="Prevents the key change issue while developing")
@@ -147,7 +149,7 @@ def handle_client(client, addr, host_key):
     print(f"\n[*] Connection received from {addr[0]}:{addr[1]}")
 
     with paramiko.Transport(client) as transport:
-        transport.local_version = "SSH-2.0-OpenSSH_9.6p1 Ubuntu-3ubuntu13.19"
+        transport.local_version = SSH_BANNER
         transport.add_server_key(host_key)
 
         server = SSHServer(addr)
