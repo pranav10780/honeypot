@@ -45,6 +45,8 @@ With `-f all`, the file extension in `-o` is replaced, so `-o logs/events.log -f
 
 >NOTE: Without `-d`, a fresh RSA key is generated on every start, so your SSH client will see a "host key changed" warning each time you restart. For local testing, create a persistent key once and use `-d`:
 
+See example.md for sample terminal and log output
+
 ### Examples
 
 ```bash

@@ -1,3 +1,5 @@
+# Examples
+
 This file is to show what the attacker and the honeypot sees on their respective sides
 
 ### Hacker/Attacker
@@ -9,7 +11,7 @@ Connection to localhost closed.
 pranav@server:~/honeypot$
 ```
 
-The attacker just see that the server just closed the connection.
+The attacker just see that the server closed the connection.
 
 ```bash
 pranav@server:~/honeypot$ nmap -sV -p 4444 localhost -T5
@@ -47,12 +49,12 @@ If the attacker decides to do a port scan the `SSH_BANNER` can spoof to make it 
 [*] Honeypot offline.
 ```
 
->NOTE: I have 2 keys loaded inside `ssh-agent` which caused it to show both undet the same user hacker.
+>NOTE: I have 2 keys loaded inside `ssh-agent` which caused it to show both under the same user hacker.
 
 
 ## File examples
 
-This is to show how different file formats will look like.
+This is to show how different file formats look.
 
 ### Text
 
@@ -65,10 +67,9 @@ pranav@server:~/honeypot$ cat hacker.txt
 [2026-10-26T07:10:47.133692+00:00] 127.0.0.1:54494 session=127.0.0.1_1792998642_89329909 channel_opened
 ```
 
-### Json
+### JSON
 
 ```json
-pranav@server:~/honeypot$ cat hacker.json 
 [
   {
     "ts": "2026-10-26T07:10:42.514374+00:00",
